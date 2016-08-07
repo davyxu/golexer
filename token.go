@@ -9,6 +9,7 @@ import (
 type Token struct {
 	value   string
 	matcher TokenMatcher
+	line    int
 }
 
 func (self *Token) ToFloat32() float32 {
@@ -26,13 +27,14 @@ func (self *Token) MatcherName() string {
 }
 
 func (self *Token) String() string {
-	return fmt.Sprintf("matcher: %s  value:%s", self.MatcherName(), self.value)
+	return fmt.Sprintf("line: %d matcher: %s  value:%s", self.line, self.MatcherName(), self.value)
 }
 
-func NewToken(m TokenMatcher, v string) *Token {
+func NewToken(m TokenMatcher, tz *Tokenizer, v string) *Token {
 
 	return &Token{
 		value:   v,
+		line:    tz.Line(),
 		matcher: m,
 	}
 }

@@ -3,6 +3,7 @@ package golexer
 type Tokenizer struct {
 	src   []rune
 	index int
+	line  int
 }
 
 func (self *Tokenizer) Current() rune {
@@ -16,6 +17,10 @@ func (self *Tokenizer) Current() rune {
 
 func (self *Tokenizer) Index() int {
 	return self.index
+}
+
+func (self *Tokenizer) Line() int {
+	return self.line
 }
 
 func (self *Tokenizer) Peek(offset int) rune {
@@ -41,6 +46,10 @@ func (self *Tokenizer) EOF() bool {
 	return self.index >= len(self.src)
 }
 
+func (self *Tokenizer) increaseLine() {
+	self.line++
+}
+
 func (self *Tokenizer) StringRange(begin, end int) string {
 
 	if begin < 0 {
@@ -57,6 +66,7 @@ func (self *Tokenizer) StringRange(begin, end int) string {
 func NewTokenizer(s string) *Tokenizer {
 
 	return &Tokenizer{
-		src: []rune(s),
+		src:  []rune(s),
+		line: 1,
 	}
 }

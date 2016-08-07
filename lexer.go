@@ -1,7 +1,11 @@
 package golexer
 
+import (
+	"errors"
+)
+
 type TokenMatcher interface {
-	Match(*Tokenizer) *Token
+	Match(*Tokenizer) (*Token, error)
 }
 
 type matcherMeta struct {
@@ -9,12 +13,18 @@ type matcherMeta struct {
 	ignore bool
 }
 
+type tokenAndError struct {
+	tk  *Token
+	err error
+}
+
 type Lexer struct {
 	matchers []matcherMeta
 
-	comm chan *Token
+	comm chan tokenAndError
 }
 
+// 添加一个匹配器，如果结果匹配，返回token
 func (self *Lexer) AddMatcher(m TokenMatcher) {
 	self.matchers = append(self.matchers, matcherMeta{
 		m:      m,
@@ -22,6 +32,7 @@ func (self *Lexer) AddMatcher(m TokenMatcher) {
 	})
 }
 
+// 添加一个匹配器，如果结果匹配，直接忽略匹配内容
 func (self *Lexer) AddIgnoreMatcher(m TokenMatcher) {
 	self.matchers = append(self.matchers, matcherMeta{
 		m:      m,
@@ -35,29 +46,37 @@ func (self *Lexer) Start(src string) {
 		close(self.comm)
 	}
 
-	self.comm = make(chan *Token)
+	self.comm = make(chan tokenAndError)
 
 	go self.tokenWorker(src)
 }
 
-func (self *Lexer) Read() *Token {
+func (self *Lexer) Read() (*Token, error) {
 	if self.comm == nil {
-		return nil
+		return nil, errors.New("call 'Start' first")
 	}
 
-	return <-self.comm
+	te := <-self.comm
+
+	return te.tk, te.err
 }
 
 func (self *Lexer) tokenWorker(src string) {
 
-	tn := NewTokenizer(src)
+	tz := NewTokenizer(src)
 
 	if len(self.matchers) > 0 {
-		for !tn.EOF() {
+
+		for !tz.EOF() {
 
 			for _, mm := range self.matchers {
 
-				token := mm.m.Match(tn)
+				token, err := mm.m.Match(tz)
+
+				if err != nil {
+					self.comm <- tokenAndError{nil, err}
+					return
+				}
 
 				if token == nil {
 					continue
@@ -67,13 +86,16 @@ func (self *Lexer) tokenWorker(src string) {
 					break
 				}
 
-				self.comm <- token
+				self.comm <- tokenAndError{token, nil}
+
+				// 重新从matcher开始检查
+				break
 
 			}
 		}
 	}
 
-	self.comm <- nil
+	self.comm <- tokenAndError{nil, nil}
 }
 
 func NewLexer() *Lexer {
