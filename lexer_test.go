@@ -17,14 +17,19 @@ func TestLexer(t *testing.T) {
 	l.AddIgnoreMatcher(new(LineEndMatcher))
 	l.AddIgnoreMatcher(new(UnixStyleCommentMatcher))
 
+	l.AddMatcher(NewSignMatcher(";"))
+
+	l.AddMatcher(NewSignMatcher("go"))
+
 	l.AddMatcher(new(IdentifierMatcher))
 
 	l.AddMatcher(new(UnknownMatcher))
 
 	l.Start(`"a" 
-	123.3
+	123.3;
+	go
 	_id # comment
-	
+	;
 	'b'
 	
 	

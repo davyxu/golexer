@@ -19,6 +19,10 @@ func (self *Tokenizer) Index() int {
 	return self.index
 }
 
+func (self *Tokenizer) Count() int {
+	return len(self.src)
+}
+
 func (self *Tokenizer) Line() int {
 	return self.line
 }

@@ -12,6 +12,10 @@ type Token struct {
 	line    int
 }
 
+func (self *Token) Value() string {
+	return self.value
+}
+
 func (self *Token) ToFloat32() float32 {
 	v, err := strconv.ParseFloat(self.value, 32)
 
