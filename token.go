@@ -12,6 +12,10 @@ type Token struct {
 	line    int
 }
 
+func (self *Token) MatcherID() int {
+	return self.matcher.ID()
+}
+
 func (self *Token) Value() string {
 	return self.value
 }
@@ -31,7 +35,7 @@ func (self *Token) MatcherName() string {
 }
 
 func (self *Token) String() string {
-	return fmt.Sprintf("line: %d matcher: %s  value:%s", self.line, self.MatcherName(), self.value)
+	return fmt.Sprintf("line: %d id:%d matcher: %s  value:%s", self.line, self.MatcherID(), self.MatcherName(), self.value)
 }
 
 func NewToken(m TokenMatcher, tz *Tokenizer, v string) *Token {

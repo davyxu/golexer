@@ -4,8 +4,10 @@ import (
 	"errors"
 )
 
-type TokenMatcher interface {
-	Match(*Tokenizer) (*Token, error)
+type Lexer struct {
+	matchers []matcherMeta
+
+	comm chan tokenAndError
 }
 
 type matcherMeta struct {
@@ -16,12 +18,6 @@ type matcherMeta struct {
 type tokenAndError struct {
 	tk  *Token
 	err error
-}
-
-type Lexer struct {
-	matchers []matcherMeta
-
-	comm chan tokenAndError
 }
 
 // 添加一个匹配器，如果结果匹配，返回token

@@ -7,8 +7,22 @@ import (
 	"unicode"
 )
 
+type TokenMatcher interface {
+	Match(*Tokenizer) (*Token, error)
+	ID() int
+}
+
+type baseMatcher struct {
+	id int
+}
+
+func (self *baseMatcher) ID() int {
+	return self.id
+}
+
 // 未知字符
 type UnknownMatcher struct {
+	baseMatcher
 }
 
 func (self *UnknownMatcher) Match(tz *Tokenizer) (*Token, error) {
@@ -24,15 +38,22 @@ func (self *UnknownMatcher) Match(tz *Tokenizer) (*Token, error) {
 	return NewToken(self, tz, tz.StringRange(begin, tz.Index())), nil
 }
 
+func NewUnknownMatcher(id int) TokenMatcher {
+	return &UnknownMatcher{
+		baseMatcher{id},
+	}
+}
+
 // 空白字符
-type WhitespaceMatcher struct {
+type WhiteSpaceMatcher struct {
+	baseMatcher
 }
 
 func isWhiteSpace(c rune) bool {
 	return c == ' ' || c == '\t'
 }
 
-func (self *WhitespaceMatcher) Match(tz *Tokenizer) (*Token, error) {
+func (self *WhiteSpaceMatcher) Match(tz *Tokenizer) (*Token, error) {
 
 	var count int
 	for {
@@ -56,8 +77,15 @@ func (self *WhitespaceMatcher) Match(tz *Tokenizer) (*Token, error) {
 	return NewToken(self, tz, ""), nil
 }
 
+func NewWhiteSpaceMatcher(id int) TokenMatcher {
+	return &WhiteSpaceMatcher{
+		baseMatcher{id},
+	}
+}
+
 // 行结束
 type LineEndMatcher struct {
+	baseMatcher
 }
 
 func (self *LineEndMatcher) Match(tz *Tokenizer) (*Token, error) {
@@ -88,8 +116,15 @@ func (self *LineEndMatcher) Match(tz *Tokenizer) (*Token, error) {
 	return NewToken(self, tz, ""), nil
 }
 
+func NewLineEndMatcher(id int) TokenMatcher {
+	return &LineEndMatcher{
+		baseMatcher{id},
+	}
+}
+
 // 整形，浮点数
 type NumeralMatcher struct {
+	baseMatcher
 }
 
 func (self *NumeralMatcher) Match(tz *Tokenizer) (*Token, error) {
@@ -138,8 +173,15 @@ func (self *NumeralMatcher) Match(tz *Tokenizer) (*Token, error) {
 	return NewToken(self, tz, tz.StringRange(begin, tz.Index())), nil
 }
 
+func NewNumeralMatcher(id int) TokenMatcher {
+	return &NumeralMatcher{
+		baseMatcher{id},
+	}
+}
+
 // 字符串
 type StringMatcher struct {
+	baseMatcher
 	builder bytes.Buffer
 }
 
@@ -193,8 +235,15 @@ func (self *StringMatcher) Match(tz *Tokenizer) (*Token, error) {
 	return NewToken(self, tz, self.builder.String()), nil
 }
 
+func NewStringMatcher(id int) TokenMatcher {
+	return &StringMatcher{
+		baseMatcher: baseMatcher{id},
+	}
+}
+
 // 标识符
 type IdentifierMatcher struct {
+	baseMatcher
 }
 
 func (self *IdentifierMatcher) Match(tz *Tokenizer) (*Token, error) {
@@ -218,8 +267,15 @@ func (self *IdentifierMatcher) Match(tz *Tokenizer) (*Token, error) {
 	return NewToken(self, tz, tz.StringRange(begin, tz.index)), nil
 }
 
+func NewIdentifierMatcher(id int) TokenMatcher {
+	return &IdentifierMatcher{
+		baseMatcher{id},
+	}
+}
+
 // 操作符，分隔符，关键字
 type SignMatcher struct {
+	baseMatcher
 	word []rune
 }
 
@@ -242,14 +298,16 @@ func (self *SignMatcher) Match(tz *Tokenizer) (*Token, error) {
 	return NewToken(self, tz, string(self.word)), nil
 }
 
-func NewSignMatcher(word string) *SignMatcher {
+func NewSignMatcher(id int, word string) TokenMatcher {
 	return &SignMatcher{
-		word: []rune(word),
+		baseMatcher: baseMatcher{id},
+		word:        []rune(word),
 	}
 }
 
 // #开头的行注释
 type UnixStyleCommentMatcher struct {
+	baseMatcher
 }
 
 func (self *UnixStyleCommentMatcher) Match(tz *Tokenizer) (*Token, error) {
@@ -272,4 +330,10 @@ func (self *UnixStyleCommentMatcher) Match(tz *Tokenizer) (*Token, error) {
 	}
 
 	return NewToken(self, tz, tz.StringRange(begin, tz.index)), nil
+}
+
+func NewUnixStyleCommentMatcher(id int) TokenMatcher {
+	return &UnixStyleCommentMatcher{
+		baseMatcher{id},
+	}
 }
