@@ -13,10 +13,19 @@ type Token struct {
 }
 
 func (self *Token) MatcherID() int {
+
+	if self == nil {
+		return 0
+	}
+
 	return self.matcher.ID()
 }
 
 func (self *Token) Value() string {
+	if self == nil {
+		return ""
+	}
+
 	return self.value
 }
 

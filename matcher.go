@@ -145,8 +145,9 @@ func (self *NumeralMatcher) Match(tz *Tokenizer) (*Token, error) {
 
 			if tz.Current() == '.' {
 				maybeFloat = true
-				break
 			}
+
+			break
 		}
 
 	}
