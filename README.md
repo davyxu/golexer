@@ -2,6 +2,8 @@
 
 可自定义的词法解析器
 
+C#版参考https://github.com/davyxu/SharpLexer
+
 # 特性
 
 * 支持数值，字符串，注释，标识符等的内建匹配
