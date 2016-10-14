@@ -14,7 +14,7 @@ type Token struct {
 
 func (self *Token) MatcherID() int {
 
-	if self == nil {
+	if self == nil || self.matcher == nil {
 		return 0
 	}
 
@@ -22,7 +22,7 @@ func (self *Token) MatcherID() int {
 }
 
 func (self *Token) Value() string {
-	if self == nil {
+	if self == nil || self.matcher == nil {
 		return ""
 	}
 
@@ -40,10 +40,19 @@ func (self *Token) ToFloat32() float32 {
 }
 
 func (self *Token) MatcherName() string {
+	if self == nil || self.matcher == nil {
+		return ""
+	}
+
 	return reflect.TypeOf(self.matcher).Elem().Name()
 }
 
 func (self *Token) String() string {
+
+	if self == nil {
+		return ""
+	}
+
 	return fmt.Sprintf("line: %d id:%d matcher: %s  value:%s", self.line, self.MatcherID(), self.MatcherName(), self.value)
 }
 

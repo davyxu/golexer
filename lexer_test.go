@@ -17,7 +17,11 @@ const (
 	Token_Semicolon
 )
 
-func TestLexer(t *testing.T) {
+type CustomParser struct {
+	*Parser
+}
+
+func NewCustomParser() *CustomParser {
 
 	l := NewLexer()
 
@@ -37,7 +41,22 @@ func TestLexer(t *testing.T) {
 
 	l.AddMatcher(NewUnknownMatcher(Token_Unknown))
 
-	l.Start(`"a" 
+	return &CustomParser{
+		Parser: NewParser(l),
+	}
+}
+
+func TestParser(t *testing.T) {
+
+	p := NewCustomParser()
+
+	defer ErrorCatcher(func(err error) {
+
+		t.Error(err.Error())
+
+	})
+
+	p.Lexer().Start(`"a" 
 	123.3;
 	go
 	_id # comment
@@ -47,20 +66,14 @@ func TestLexer(t *testing.T) {
 	
 	`)
 
-	for {
+	p.NextToken()
 
-		tk, err := l.Read()
+	for p.TokenID() != 0 {
 
-		if err != nil {
-			t.Error(err)
-			break
-		}
+		t.Log(p.TokenID(), p.TokenValue())
 
-		if tk == nil {
-			break
-		}
+		p.NextToken()
 
-		t.Log(tk.String())
 	}
 
 }

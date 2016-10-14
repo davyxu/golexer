@@ -8,6 +8,8 @@ type Lexer struct {
 	matchers []matcherMeta
 
 	comm chan tokenAndError
+
+	running bool
 }
 
 type matcherMeta struct {
@@ -44,15 +46,26 @@ func (self *Lexer) Start(src string) {
 
 	self.comm = make(chan tokenAndError)
 
+	self.running = true
+
 	go self.tokenWorker(src)
 }
 
 func (self *Lexer) Read() (*Token, error) {
+
+	if !self.running {
+		return nil, nil
+	}
+
 	if self.comm == nil {
 		return nil, errors.New("call 'Start' first")
 	}
 
 	te := <-self.comm
+
+	if te.err != nil || te.tk.MatcherID() == 0 {
+		self.running = false
+	}
 
 	return te.tk, te.err
 }
@@ -70,7 +83,7 @@ func (self *Lexer) tokenWorker(src string) {
 				token, err := mm.m.Match(tz)
 
 				if err != nil {
-					self.comm <- tokenAndError{nil, err}
+					self.comm <- tokenAndError{NewToken(nil, tz, err.Error()), err}
 					return
 				}
 
@@ -91,7 +104,7 @@ func (self *Lexer) tokenWorker(src string) {
 		}
 	}
 
-	self.comm <- tokenAndError{nil, nil}
+	self.comm <- tokenAndError{NewToken(nil, tz, "EOF"), nil}
 }
 
 func NewLexer() *Lexer {
