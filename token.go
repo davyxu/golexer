@@ -21,8 +21,8 @@ func (self *Token) MatcherID() int {
 	return self.matcher.ID()
 }
 
-func (self *Token) Value() string {
-	if self == nil || self.matcher == nil {
+func (self Token) Value() string {
+	if self.matcher == nil {
 		return ""
 	}
 

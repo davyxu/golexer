@@ -6,7 +6,8 @@ import (
 
 // 自定义的token id
 const (
-	Token_Unknown = iota
+	Token_EOF = iota
+	Token_Unknown
 	Token_Numeral
 	Token_String
 	Token_WhiteSpace
