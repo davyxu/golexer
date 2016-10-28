@@ -9,7 +9,24 @@ import (
 type Token struct {
 	value   string
 	matcher TokenMatcher
-	line    int
+	line    int // 行
+	index   int // 列
+}
+
+func (self *Token) Line() int {
+	if self == nil {
+		return 0
+	}
+
+	return self.line
+}
+
+func (self *Token) Index() int {
+	if self == nil {
+		return 0
+	}
+
+	return self.index
 }
 
 func (self *Token) MatcherID() int {
@@ -61,6 +78,7 @@ func NewToken(m TokenMatcher, tz *Tokenizer, v string) *Token {
 	return &Token{
 		value:   v,
 		line:    tz.Line(),
+		index:   tz.Index(),
 		matcher: m,
 	}
 }
