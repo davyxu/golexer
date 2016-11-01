@@ -8,6 +8,7 @@ import (
 
 type Token struct {
 	value   string
+	raw     string
 	matcher TokenMatcher
 	line    int // 行
 	index   int // 列
@@ -46,6 +47,14 @@ func (self Token) Value() string {
 	return self.value
 }
 
+func (self Token) Raw() string {
+	if self.matcher == nil {
+		return ""
+	}
+
+	return self.raw
+}
+
 func (self *Token) ToFloat32() float32 {
 	v, err := strconv.ParseFloat(self.value, 32)
 
@@ -73,10 +82,15 @@ func (self *Token) String() string {
 	return fmt.Sprintf("line: %d id:%d matcher: %s  value:%s", self.line, self.MatcherID(), self.MatcherName(), self.value)
 }
 
-func NewToken(m TokenMatcher, tz *Tokenizer, v string) *Token {
+func NewToken(m TokenMatcher, tz *Tokenizer, v string, raw string) *Token {
+
+	if raw == "" {
+		raw = v
+	}
 
 	return &Token{
 		value:   v,
+		raw:     raw,
 		line:    tz.Line(),
 		index:   tz.Index(),
 		matcher: m,

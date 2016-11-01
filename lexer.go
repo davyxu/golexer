@@ -83,7 +83,7 @@ func (self *Lexer) tokenWorker(src string) {
 				token, err := mm.m.Match(tz)
 
 				if err != nil {
-					self.comm <- tokenAndError{NewToken(nil, tz, err.Error()), err}
+					self.comm <- tokenAndError{NewToken(nil, tz, err.Error(), ""), err}
 					return
 				}
 
@@ -104,7 +104,7 @@ func (self *Lexer) tokenWorker(src string) {
 		}
 	}
 
-	self.comm <- tokenAndError{NewToken(nil, tz, "EOF"), nil}
+	self.comm <- tokenAndError{NewToken(nil, tz, "EOF", ""), nil}
 }
 
 func NewLexer() *Lexer {

@@ -35,7 +35,7 @@ func (self *UnknownMatcher) Match(tz *Tokenizer) (*Token, error) {
 
 	tz.ConsumeOne()
 
-	return NewToken(self, tz, tz.StringRange(begin, tz.Index())), nil
+	return NewToken(self, tz, tz.StringRange(begin, tz.Index()), ""), nil
 }
 
 func NewUnknownMatcher(id int) TokenMatcher {
@@ -76,7 +76,7 @@ func (self *WhiteSpaceMatcher) Match(tz *Tokenizer) (*Token, error) {
 
 	tz.ConsumeMulti(count)
 
-	return NewToken(self, tz, string(ret)), nil
+	return NewToken(self, tz, string(ret), ""), nil
 }
 
 func NewWhiteSpaceMatcher(id int) TokenMatcher {
@@ -115,7 +115,7 @@ func (self *LineEndMatcher) Match(tz *Tokenizer) (*Token, error) {
 
 	tz.ConsumeMulti(count)
 
-	return NewToken(self, tz, ""), nil
+	return NewToken(self, tz, "\r", ""), nil
 }
 
 func NewLineEndMatcher(id int) TokenMatcher {
@@ -173,7 +173,7 @@ func (self *NumeralMatcher) Match(tz *Tokenizer) (*Token, error) {
 		}
 	}
 
-	return NewToken(self, tz, tz.StringRange(begin, tz.Index())), nil
+	return NewToken(self, tz, tz.StringRange(begin, tz.Index()), ""), nil
 }
 
 func NewNumeralMatcher(id int) TokenMatcher {
@@ -193,6 +193,8 @@ func (self *StringMatcher) Match(tz *Tokenizer) (*Token, error) {
 	if tz.Current() != '"' && tz.Current() != '\'' {
 		return nil, nil
 	}
+
+	begin := tz.Index()
 
 	tz.ConsumeOne()
 
@@ -235,7 +237,7 @@ func (self *StringMatcher) Match(tz *Tokenizer) (*Token, error) {
 
 	tz.ConsumeOne()
 
-	return NewToken(self, tz, self.builder.String()), nil
+	return NewToken(self, tz, self.builder.String(), tz.StringRange(begin, tz.Index())), nil
 }
 
 func NewStringMatcher(id int) TokenMatcher {
@@ -267,7 +269,7 @@ func (self *IdentifierMatcher) Match(tz *Tokenizer) (*Token, error) {
 
 	}
 
-	return NewToken(self, tz, tz.StringRange(begin, tz.index)), nil
+	return NewToken(self, tz, tz.StringRange(begin, tz.index), ""), nil
 }
 
 func NewIdentifierMatcher(id int) TokenMatcher {
@@ -298,7 +300,7 @@ func (self *SignMatcher) Match(tz *Tokenizer) (*Token, error) {
 
 	tz.ConsumeMulti(len(self.word))
 
-	return NewToken(self, tz, string(self.word)), nil
+	return NewToken(self, tz, string(self.word), ""), nil
 }
 
 func NewSignMatcher(id int, word string) TokenMatcher {
@@ -332,7 +334,7 @@ func (self *UnixStyleCommentMatcher) Match(tz *Tokenizer) (*Token, error) {
 
 	}
 
-	return NewToken(self, tz, tz.StringRange(begin, tz.index)), nil
+	return NewToken(self, tz, tz.StringRange(begin, tz.index), ""), nil
 }
 
 func NewUnixStyleCommentMatcher(id int) TokenMatcher {

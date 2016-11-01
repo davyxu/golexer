@@ -52,6 +52,10 @@ func (self *Parser) TokenValue() string {
 	return self.curr.Value()
 }
 
+func (self *Parser) TokenRaw() string {
+	return self.curr.Raw()
+}
+
 func (self *Parser) TokenPos() (int, int) {
 	return self.curr.line, self.curr.index
 }
