@@ -22,6 +22,8 @@ type tokenAndError struct {
 	err error
 }
 
+var eofToken = tokenAndError{NewToken(nil, nil, "EOF", ""), nil}
+
 // 添加一个匹配器，如果结果匹配，返回token
 func (self *Lexer) AddMatcher(m TokenMatcher) {
 	self.matchers = append(self.matchers, matcherMeta{
@@ -54,11 +56,11 @@ func (self *Lexer) Start(src string) {
 func (self *Lexer) Read() (*Token, error) {
 
 	if !self.running {
-		return nil, nil
+		return eofToken.tk, nil
 	}
 
 	if self.comm == nil {
-		return nil, errors.New("call 'Start' first")
+		return eofToken.tk, errors.New("call 'Start' first")
 	}
 
 	te := <-self.comm
@@ -104,7 +106,7 @@ func (self *Lexer) tokenWorker(src string) {
 		}
 	}
 
-	self.comm <- tokenAndError{NewToken(nil, tz, "EOF", ""), nil}
+	self.comm <- eofToken
 }
 
 func NewLexer() *Lexer {

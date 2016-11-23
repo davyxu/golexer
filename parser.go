@@ -53,6 +53,7 @@ func (self *Parser) TokenValue() string {
 }
 
 func (self *Parser) TokenRaw() string {
+
 	return self.curr.Raw()
 }
 

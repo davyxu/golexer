@@ -88,11 +88,16 @@ func NewToken(m TokenMatcher, tz *Tokenizer, v string, raw string) *Token {
 		raw = v
 	}
 
-	return &Token{
+	self := &Token{
 		value:   v,
 		raw:     raw,
-		line:    tz.Line(),
-		index:   tz.Index(),
 		matcher: m,
 	}
+
+	if tz != nil {
+		self.line = tz.Line()
+		self.index = tz.Index()
+	}
+
+	return self
 }
