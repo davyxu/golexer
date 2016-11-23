@@ -59,6 +59,7 @@ func TestParser(t *testing.T) {
 
 	p.Lexer().Start(`"a" 
 	123.3;
+	-1
 	go
 	_id # comment
 	;

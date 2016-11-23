@@ -127,11 +127,13 @@ func NewLineEndMatcher(id int) TokenMatcher {
 // 整形，浮点数
 type NumeralMatcher struct {
 	baseMatcher
+	includeNagtive bool
 }
 
 func (self *NumeralMatcher) Match(tz *Tokenizer) (*Token, error) {
 
-	if !unicode.IsDigit(tz.Current()) && tz.Current() != '-' {
+	if !(unicode.IsDigit(tz.Current()) || (self.includeNagtive && tz.Current() == '-')) {
+
 		return nil, nil
 	}
 
@@ -178,7 +180,15 @@ func (self *NumeralMatcher) Match(tz *Tokenizer) (*Token, error) {
 
 func NewNumeralMatcher(id int) TokenMatcher {
 	return &NumeralMatcher{
-		baseMatcher{id},
+		baseMatcher:    baseMatcher{id},
+		includeNagtive: true,
+	}
+}
+
+func NewPositiveNumeralMatcher(id int) TokenMatcher {
+	return &NumeralMatcher{
+		baseMatcher:    baseMatcher{id},
+		includeNagtive: false,
 	}
 }
 
