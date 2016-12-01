@@ -65,6 +65,36 @@ func (self *Token) ToFloat32() float32 {
 	return float32(v)
 }
 
+func (self *Token) ToInt32() int32 {
+	v, err := strconv.ParseInt(self.value, 10, 32)
+
+	if err != nil {
+		return 0
+	}
+
+	return int32(v)
+}
+
+func (self *Token) ToInt() int {
+	v, err := strconv.ParseInt(self.value, 10, 32)
+
+	if err != nil {
+		return 0
+	}
+
+	return int(v)
+}
+
+func (self *Token) ToInt64() int64 {
+	v, err := strconv.ParseInt(self.value, 10, 64)
+
+	if err != nil {
+		return 0
+	}
+
+	return v
+}
+
 func (self *Token) MatcherName() string {
 	if self == nil || self.matcher == nil {
 		return ""

@@ -14,7 +14,10 @@ const (
 	Token_LineEnd
 	Token_UnixStyleComment
 	Token_Identifier
+	Token_Dot
 	Token_Go
+	Token_XX
+	Token_Haha
 	Token_Semicolon
 )
 
@@ -36,7 +39,10 @@ func NewCustomParser() *CustomParser {
 	l.AddIgnoreMatcher(NewUnixStyleCommentMatcher(Token_UnixStyleComment))
 
 	l.AddMatcher(NewSignMatcher(Token_Semicolon, ";"))
-	l.AddMatcher(NewSignMatcher(Token_Go, "go"))
+	l.AddMatcher(NewSignMatcher(Token_Dot, "."))
+	l.AddMatcher(NewKeywordMatcher(Token_Go, "go"))
+	l.AddMatcher(NewKeywordMatcher(Token_XX, "xx"))
+	l.AddMatcher(NewKeywordMatcher(Token_Haha, "哈哈"))
 
 	l.AddMatcher(NewIdentifierMatcher(Token_Identifier))
 
@@ -60,8 +66,9 @@ func TestParser(t *testing.T) {
 	p.Lexer().Start(`"a" 
 	123.3;
 	-1
-	go
+	gonew.xx
 	_id # comment
+	哈哈
 	;
 	'b'
 	
@@ -72,7 +79,7 @@ func TestParser(t *testing.T) {
 
 	for p.TokenID() != 0 {
 
-		t.Log(p.TokenID(), p.TokenValue())
+		t.Log(p.TokenID(), p.TokenValue(), p.MatcherName())
 
 		p.NextToken()
 

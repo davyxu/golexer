@@ -52,6 +52,10 @@ func (self *Parser) TokenValue() string {
 	return self.curr.Value()
 }
 
+func (self *Parser) MatcherName() string {
+	return self.curr.MatcherName()
+}
+
 func (self *Parser) TokenRaw() string {
 
 	return self.curr.Raw()
