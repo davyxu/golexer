@@ -17,7 +17,8 @@ const (
 	Token_Dot
 	Token_Go
 	Token_XX
-	Token_Haha
+	Token_Every
+	Token_Week
 	Token_Semicolon
 )
 
@@ -42,7 +43,8 @@ func NewCustomParser() *CustomParser {
 	l.AddMatcher(NewSignMatcher(Token_Dot, "."))
 	l.AddMatcher(NewKeywordMatcher(Token_Go, "go"))
 	l.AddMatcher(NewKeywordMatcher(Token_XX, "xx"))
-	l.AddMatcher(NewKeywordMatcher(Token_Haha, "哈哈"))
+	l.AddMatcher(NewKeywordMatcher(Token_Every, "每"))
+	l.AddMatcher(NewKeywordMatcher(Token_Week, "周"))
 
 	l.AddMatcher(NewIdentifierMatcher(Token_Identifier))
 
@@ -68,7 +70,7 @@ func TestParser(t *testing.T) {
 	-1
 	gonew.xx
 	_id # comment
-	哈哈
+	每周
 	;
 	'b'
 	

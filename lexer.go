@@ -24,6 +24,15 @@ type tokenAndError struct {
 
 var eofToken = tokenAndError{NewToken(nil, nil, "EOF", ""), nil}
 
+func (self *Lexer) VisitMatcher(callback func(TokenMatcher) bool) {
+
+	for _, m := range self.matchers {
+		if !callback(m.m) {
+			return
+		}
+	}
+}
+
 // 添加一个匹配器，如果结果匹配，返回token
 func (self *Lexer) AddMatcher(m TokenMatcher) {
 	self.matchers = append(self.matchers, matcherMeta{
@@ -74,7 +83,7 @@ func (self *Lexer) Read() (*Token, error) {
 
 func (self *Lexer) tokenWorker(src string) {
 
-	tz := NewTokenizer(src)
+	tz := NewTokenizer(src, self)
 
 	if len(self.matchers) > 0 {
 

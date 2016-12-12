@@ -10,6 +10,10 @@ type KVPair struct {
 	values map[string]interface{}
 }
 
+func (self *KVPair) Raw() map[string]interface{} {
+	return self.values
+}
+
 func (self *KVPair) getSortedKey() []string {
 
 	sortedKeys := make([]string, len(self.values))

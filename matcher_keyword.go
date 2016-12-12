@@ -1,8 +1,6 @@
 package golexer
 
-import (
-	"unicode"
-)
+import "unicode"
 
 // 操作符，分隔符，关键字
 type KeywordMatcher struct {
@@ -34,7 +32,25 @@ func (self *KeywordMatcher) Match(tz *Tokenizer) (*Token, error) {
 	}
 
 	pc := tz.Peek(len(self.word))
-	if isKeyword(pc) {
+
+	var needParser bool
+
+	tz.Lexer.VisitMatcher(func(m TokenMatcher) bool {
+
+		km, ok := m.(*KeywordMatcher)
+		if ok {
+
+			if km.word[0] == pc {
+				needParser = true
+				return false
+			}
+
+		}
+
+		return true
+	})
+
+	if isKeyword(pc) && !needParser {
 		return nil, nil
 	}
 
@@ -44,6 +60,11 @@ func (self *KeywordMatcher) Match(tz *Tokenizer) (*Token, error) {
 }
 
 func NewKeywordMatcher(id int, word string) TokenMatcher {
+
+	if len(word) == 0 {
+		panic("empty string")
+	}
+
 	self := &KeywordMatcher{
 		baseMatcher: baseMatcher{id},
 		word:        []rune(word),

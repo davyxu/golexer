@@ -4,6 +4,7 @@ type Tokenizer struct {
 	src   []rune
 	index int
 	line  int
+	Lexer *Lexer
 }
 
 func (self *Tokenizer) Current() rune {
@@ -67,10 +68,11 @@ func (self *Tokenizer) StringRange(begin, end int) string {
 	return string(self.src[begin:end])
 }
 
-func NewTokenizer(s string) *Tokenizer {
+func NewTokenizer(s string, l *Lexer) *Tokenizer {
 
 	return &Tokenizer{
-		src:  []rune(s),
-		line: 1,
+		src:   []rune(s),
+		line:  1,
+		Lexer: l,
 	}
 }

@@ -18,7 +18,10 @@ func TestKVParser(t *testing.T) {
 		return true
 	})
 
-	kvp := NewKVPair(`protobuf:"varint,1,opt,name=AutoID,json=autoID" json:"AutoID,omitempty" my:[1, 2]`)
+	kvp := NewKVPair()
+	if err := kvp.Parse(`protobuf:"varint,1,opt,name=AutoID,json=autoID" json:"AutoID,omitempty" my:[1, 2]`); err != nil {
+		t.Error(err)
+	}
 
 	t.Log(kvp.GetString("json"))
 
