@@ -80,6 +80,9 @@ func ErrorCatcher(errFunc func(error)) {
 
 	case error:
 		errFunc(err.(error))
+	case nil:
+	default:
+		panic(err)
 	}
 }
 
