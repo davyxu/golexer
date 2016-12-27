@@ -14,6 +14,8 @@ func (self *StringMatcher) Match(tz *Tokenizer) (*Token, error) {
 		return nil, nil
 	}
 
+	beginChar := tz.Current()
+
 	begin := tz.Index()
 
 	tz.ConsumeOne()
@@ -30,6 +32,8 @@ func (self *StringMatcher) Match(tz *Tokenizer) (*Token, error) {
 				self.builder.WriteRune('\n')
 			case 'r':
 				self.builder.WriteRune('\r')
+			case '"', '\'':
+				self.builder.WriteRune(tz.Current())
 			default:
 				self.builder.WriteRune('\\')
 				self.builder.WriteRune(tz.Current())
@@ -46,10 +50,12 @@ func (self *StringMatcher) Match(tz *Tokenizer) (*Token, error) {
 
 		tz.ConsumeOne()
 
+		if !escaping && tz.Current() == beginChar {
+			break
+		}
+
 		if tz.Current() == '\n' ||
-			tz.Current() == 0 ||
-			tz.Current() == '"' ||
-			tz.Current() == '\'' {
+			tz.Current() == 0 {
 			break
 		}
 

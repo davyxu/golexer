@@ -65,23 +65,23 @@ func TestParser(t *testing.T) {
 
 	})
 
-	p.Lexer().Start(`"a" 
-	123.3;
-	-1
-	gonew.xx
-	_id # comment
-	每周
-	;
-	'b'
-	
-	
-	`)
+	p.Lexer().Start(`"a"
+		123.3;
+		-1
+		gonew.xx
+		_id # comment
+		每周
+		"\'\""
+		;
+		'b'
+
+		`)
 
 	p.NextToken()
 
 	for p.TokenID() != 0 {
 
-		t.Log(p.TokenID(), p.TokenValue(), p.MatcherName())
+		t.Logf("id: %d value:'%s' name: %s", p.TokenID(), p.TokenValue(), p.MatcherName())
 
 		p.NextToken()
 
