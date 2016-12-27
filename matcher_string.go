@@ -40,19 +40,17 @@ func (self *StringMatcher) Match(tz *Tokenizer) (*Token, error) {
 			}
 
 			escaping = false
-		} else {
+		} else if tz.Current() != beginChar {
 			if tz.Current() == '\\' {
 				escaping = true
 			} else {
 				self.builder.WriteRune(tz.Current())
 			}
+		} else {
+			break
 		}
 
 		tz.ConsumeOne()
-
-		if !escaping && tz.Current() == beginChar {
-			break
-		}
 
 		if tz.Current() == '\n' ||
 			tz.Current() == 0 {

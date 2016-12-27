@@ -72,6 +72,7 @@ func TestParser(t *testing.T) {
 		_id # comment
 		每周
 		"\'\""
+		""
 		;
 		'b'
 
