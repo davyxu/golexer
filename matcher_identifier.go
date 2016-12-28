@@ -26,7 +26,7 @@ func (self *IdentifierMatcher) Match(tz *Tokenizer) (*Token, error) {
 
 		tz.ConsumeOne()
 
-		if !unicode.IsLetter(tz.Current()) && tz.Current() != '_' {
+		if !(unicode.IsLetter(tz.Current()) || unicode.IsDigit(tz.Current())) && tz.Current() != '_' {
 			break
 		}
 

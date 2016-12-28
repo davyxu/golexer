@@ -68,6 +68,7 @@ func TestParser(t *testing.T) {
 	p.Lexer().Start(`"a"
 		123.3;
 		-1
+		Base64Text
 		gonew.xx
 		_id # comment
 		每周
