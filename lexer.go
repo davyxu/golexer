@@ -33,6 +33,25 @@ func (self *Lexer) VisitMatcher(callback func(TokenMatcher) bool) {
 	}
 }
 
+func (self *Lexer) MatcherString(id int) string {
+	m := self.MatcherByID(id)
+	if m != nil {
+		return m.String()
+	}
+
+	return ""
+}
+
+func (self *Lexer) MatcherByID(id int) TokenMatcher {
+	for _, m := range self.matchers {
+		if m.m.ID() == id {
+			return m.m
+		}
+	}
+
+	return nil
+}
+
 // 添加一个匹配器，如果结果匹配，返回token
 func (self *Lexer) AddMatcher(m TokenMatcher) {
 	self.matchers = append(self.matchers, matcherMeta{

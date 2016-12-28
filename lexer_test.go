@@ -82,7 +82,7 @@ func TestParser(t *testing.T) {
 
 	for p.TokenID() != 0 {
 
-		t.Logf("id: %d value:'%s' name: %s", p.TokenID(), p.TokenValue(), p.MatcherName())
+		t.Logf("id: %d value:'%s' name: %s", p.TokenID(), p.TokenValue(), p.MatcherString())
 
 		p.NextToken()
 

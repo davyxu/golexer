@@ -1,10 +1,17 @@
 package golexer
 
-import "unicode"
+import (
+	"reflect"
+	"unicode"
+)
 
 // 标识符
 type IdentifierMatcher struct {
 	baseMatcher
+}
+
+func (self *IdentifierMatcher) String() string {
+	return reflect.TypeOf(self).Elem().Name()
 }
 
 func (self *IdentifierMatcher) Match(tz *Tokenizer) (*Token, error) {

@@ -103,6 +103,14 @@ func (self *Token) MatcherName() string {
 	return reflect.TypeOf(self.matcher).Elem().Name()
 }
 
+func (self *Token) MatcherString() string {
+	if self == nil || self.matcher == nil {
+		return ""
+	}
+
+	return self.matcher.String()
+}
+
 func (self *Token) String() string {
 
 	if self == nil {

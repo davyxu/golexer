@@ -1,6 +1,10 @@
 package golexer
 
-import "unicode"
+import (
+	"fmt"
+	"reflect"
+	"unicode"
+)
 
 // 操作符，分隔符，关键字
 type KeywordMatcher struct {
@@ -11,6 +15,10 @@ type KeywordMatcher struct {
 func isKeyword(r rune) bool {
 	return unicode.IsLetter(r) ||
 		r == '_'
+}
+
+func (self *KeywordMatcher) String() string {
+	return fmt.Sprintf("%s(%s)", reflect.TypeOf(self).Elem().Name(), string(self.word))
 }
 
 func (self *KeywordMatcher) Match(tz *Tokenizer) (*Token, error) {

@@ -1,11 +1,18 @@
 package golexer
 
-import "bytes"
+import (
+	"bytes"
+	"reflect"
+)
 
 // 字符串
 type StringMatcher struct {
 	baseMatcher
 	builder bytes.Buffer
+}
+
+func (self *StringMatcher) String() string {
+	return reflect.TypeOf(self).Elem().Name()
 }
 
 func (self *StringMatcher) Match(tz *Tokenizer) (*Token, error) {

@@ -1,8 +1,14 @@
 package golexer
 
+import "reflect"
+
 // #开头的行注释
 type UnixStyleCommentMatcher struct {
 	baseMatcher
+}
+
+func (self *UnixStyleCommentMatcher) String() string {
+	return reflect.TypeOf(self).Elem().Name()
 }
 
 func (self *UnixStyleCommentMatcher) Match(tz *Tokenizer) (*Token, error) {

@@ -1,8 +1,14 @@
 package golexer
 
+import "reflect"
+
 // 空白字符
 type WhiteSpaceMatcher struct {
 	baseMatcher
+}
+
+func (self *WhiteSpaceMatcher) String() string {
+	return reflect.TypeOf(self).Elem().Name()
 }
 
 func isWhiteSpace(c rune) bool {

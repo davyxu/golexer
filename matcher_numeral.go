@@ -2,6 +2,7 @@ package golexer
 
 import (
 	"errors"
+	"reflect"
 	"unicode"
 )
 
@@ -9,6 +10,10 @@ import (
 type NumeralMatcher struct {
 	baseMatcher
 	includeNagtive bool
+}
+
+func (self *NumeralMatcher) String() string {
+	return reflect.TypeOf(self).Elem().Name()
 }
 
 func (self *NumeralMatcher) Match(tz *Tokenizer) (*Token, error) {
