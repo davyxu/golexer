@@ -1,15 +1,11 @@
 package golexer
 
-import (
-	"errors"
-)
-
 type Lexer struct {
 	matchers []matcherMeta
 
-	comm chan tokenAndError
-
 	running bool
+
+	tz *Tokenizer
 }
 
 type matcherMeta struct {
@@ -17,12 +13,7 @@ type matcherMeta struct {
 	ignore bool
 }
 
-type tokenAndError struct {
-	tk  *Token
-	err error
-}
-
-var eofToken = tokenAndError{NewToken(nil, nil, "EOF", ""), nil}
+var eofToken = NewToken(nil, nil, "EOF", "")
 
 func (self *Lexer) VisitMatcher(callback func(TokenMatcher) bool) {
 
@@ -70,71 +61,55 @@ func (self *Lexer) AddIgnoreMatcher(m TokenMatcher) {
 
 func (self *Lexer) Start(src string) {
 
-	if self.comm != nil {
-		close(self.comm)
-	}
-
-	self.comm = make(chan tokenAndError)
-
 	self.running = true
 
-	go self.tokenWorker(src)
+	self.tz = NewTokenizer(src, self)
 }
 
 func (self *Lexer) Read() (*Token, error) {
 
 	if !self.running {
-		return eofToken.tk, nil
+		return eofToken, nil
 	}
 
-	if self.comm == nil {
-		return eofToken.tk, errors.New("call 'Start' first")
-	}
+	tk, err := self.readToken()
 
-	te := <-self.comm
-
-	if te.err != nil || te.tk.MatcherID() == 0 {
+	if err != nil || tk.MatcherID() == 0 {
 		self.running = false
 	}
 
-	return te.tk, te.err
+	return tk, err
 }
 
-func (self *Lexer) tokenWorker(src string) {
+func (self *Lexer) readToken() (*Token, error) {
 
-	tz := NewTokenizer(src, self)
+	if len(self.matchers) == 0 {
+		return eofToken, nil
+	}
 
-	if len(self.matchers) > 0 {
+	for !self.tz.EOF() {
 
-		for !tz.EOF() {
+		for _, mm := range self.matchers {
 
-			for _, mm := range self.matchers {
+			token, err := mm.m.Match(self.tz)
 
-				token, err := mm.m.Match(tz)
-
-				if err != nil {
-					self.comm <- tokenAndError{NewToken(nil, tz, err.Error(), ""), err}
-					return
-				}
-
-				if token == nil {
-					continue
-				}
-
-				if mm.ignore {
-					break
-				}
-
-				self.comm <- tokenAndError{token, nil}
-
-				// 重新从matcher开始检查
-				break
-
+			if err != nil {
+				return NewToken(nil, self.tz, err.Error(), ""), err
 			}
+
+			if token == nil {
+				continue
+			}
+
+			if mm.ignore {
+				break
+			}
+
+			return token, nil
 		}
 	}
 
-	self.comm <- eofToken
+	return eofToken, nil
 }
 
 func NewLexer() *Lexer {
