@@ -1,6 +1,8 @@
 package golexer
 
 import (
+	"bytes"
+	"fmt"
 	"testing"
 )
 
@@ -79,12 +81,40 @@ func TestParser(t *testing.T) {
 
 	p.NextToken()
 
+	rightAnswer := `===
+MatcherName: 'StringMatcher' Value: 'a'
+MatcherName: 'NumeralMatcher' Value: '123.3'
+MatcherName: 'SignMatcher' Value: ';'
+MatcherName: 'NumeralMatcher' Value: '-1'
+MatcherName: 'IdentifierMatcher' Value: 'gonew'
+MatcherName: 'SignMatcher' Value: '.'
+MatcherName: 'KeywordMatcher' Value: 'xx'
+MatcherName: 'IdentifierMatcher' Value: '_id'
+MatcherName: 'KeywordMatcher' Value: '每'
+MatcherName: 'KeywordMatcher' Value: '周'
+MatcherName: 'SignMatcher' Value: ';'
+MatcherName: 'StringMatcher' Value: 'b'
+===
+`
+
+	var b bytes.Buffer
+
+	b.WriteString("===\n")
+
 	for p.TokenID() != 0 {
 
-		t.Log(p.TokenID(), p.TokenValue(), p.MatcherName())
+		b.WriteString(fmt.Sprintf("MatcherName: '%s' Value: '%s'\n", p.MatcherName(), p.TokenValue()))
 
 		p.NextToken()
 
+	}
+
+	b.WriteString("===\n")
+
+	fmt.Println(b.String())
+
+	if b.String() != rightAnswer {
+		t.FailNow()
 	}
 
 }
