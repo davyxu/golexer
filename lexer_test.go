@@ -67,17 +67,19 @@ func TestParser(t *testing.T) {
 
 	})
 
-	p.Lexer().Start(`"a" 
-	123.3;
-	-1
-	gonew.xx
-	_id # comment
-	每周
-	;
-	'b'
-	
-	
-	`)
+	p.Lexer().Start(`"a"
+		123.3;
+		-1
+		Base64Text
+		gonew.xx
+		_id # comment
+		每周
+		"\'\""
+		""
+		;
+		'b'
+
+		`)
 
 	p.NextToken()
 
@@ -86,12 +88,15 @@ MatcherName: 'StringMatcher' Value: 'a'
 MatcherName: 'NumeralMatcher' Value: '123.3'
 MatcherName: 'SignMatcher' Value: ';'
 MatcherName: 'NumeralMatcher' Value: '-1'
+MatcherName: 'IdentifierMatcher' Value: 'Base64Text'
 MatcherName: 'IdentifierMatcher' Value: 'gonew'
 MatcherName: 'SignMatcher' Value: '.'
 MatcherName: 'KeywordMatcher' Value: 'xx'
 MatcherName: 'IdentifierMatcher' Value: '_id'
 MatcherName: 'KeywordMatcher' Value: '每'
 MatcherName: 'KeywordMatcher' Value: '周'
+MatcherName: 'StringMatcher' Value: ''"'
+MatcherName: 'StringMatcher' Value: ''
 MatcherName: 'SignMatcher' Value: ';'
 MatcherName: 'StringMatcher' Value: 'b'
 ===

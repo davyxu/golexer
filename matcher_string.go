@@ -1,6 +1,9 @@
 package golexer
 
-import "bytes"
+import (
+	"bytes"
+	"reflect"
+)
 
 // 字符串
 type StringMatcher struct {
@@ -8,11 +11,17 @@ type StringMatcher struct {
 	builder bytes.Buffer
 }
 
+func (self *StringMatcher) String() string {
+	return reflect.TypeOf(self).Elem().Name()
+}
+
 func (self *StringMatcher) Match(tz *Tokenizer) (*Token, error) {
 
 	if tz.Current() != '"' && tz.Current() != '\'' {
 		return nil, nil
 	}
+
+	beginChar := tz.Current()
 
 	begin := tz.Index()
 
@@ -30,26 +39,28 @@ func (self *StringMatcher) Match(tz *Tokenizer) (*Token, error) {
 				self.builder.WriteRune('\n')
 			case 'r':
 				self.builder.WriteRune('\r')
+			case '"', '\'':
+				self.builder.WriteRune(tz.Current())
 			default:
 				self.builder.WriteRune('\\')
 				self.builder.WriteRune(tz.Current())
 			}
 
 			escaping = false
-		} else {
+		} else if tz.Current() != beginChar {
 			if tz.Current() == '\\' {
 				escaping = true
 			} else {
 				self.builder.WriteRune(tz.Current())
 			}
+		} else {
+			break
 		}
 
 		tz.ConsumeOne()
 
 		if tz.Current() == '\n' ||
-			tz.Current() == 0 ||
-			tz.Current() == '"' ||
-			tz.Current() == '\'' {
+			tz.Current() == 0 {
 			break
 		}
 

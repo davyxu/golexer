@@ -1,5 +1,9 @@
 package golexer
 
+import (
+	"errors"
+)
+
 // 自定义的token id
 const (
 	pbtToken_EOF = iota
@@ -46,7 +50,7 @@ func ParseKV(str string, callback func(string, interface{}) bool) (errRet error)
 	for p.TokenID() != pbtToken_EOF {
 
 		if p.TokenID() != pbtToken_Identifier {
-			panic("expect identifier")
+			panic(errors.New("expect identifier: " + p.TokenValue()))
 		}
 
 		key := p.TokenValue()
@@ -54,7 +58,7 @@ func ParseKV(str string, callback func(string, interface{}) bool) (errRet error)
 		p.NextToken()
 
 		if p.TokenID() != pbtToken_Colon {
-			panic("expect comma")
+			panic(errors.New("expect comma: " + p.TokenValue()))
 		}
 
 		p.NextToken()

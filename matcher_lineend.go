@@ -1,8 +1,14 @@
 package golexer
 
+import "reflect"
+
 // 行结束
 type LineEndMatcher struct {
 	baseMatcher
+}
+
+func (self *LineEndMatcher) String() string {
+	return reflect.TypeOf(self).Elem().Name()
 }
 
 func (self *LineEndMatcher) Match(tz *Tokenizer) (*Token, error) {

@@ -1,10 +1,17 @@
 package golexer
 
-import "unicode"
+import (
+	"reflect"
+	"unicode"
+)
 
 // 标识符
 type IdentifierMatcher struct {
 	baseMatcher
+}
+
+func (self *IdentifierMatcher) String() string {
+	return reflect.TypeOf(self).Elem().Name()
 }
 
 func (self *IdentifierMatcher) Match(tz *Tokenizer) (*Token, error) {
@@ -19,7 +26,7 @@ func (self *IdentifierMatcher) Match(tz *Tokenizer) (*Token, error) {
 
 		tz.ConsumeOne()
 
-		if !unicode.IsLetter(tz.Current()) && tz.Current() != '_' {
+		if !(unicode.IsLetter(tz.Current()) || unicode.IsDigit(tz.Current())) && tz.Current() != '_' {
 			break
 		}
 

@@ -1,8 +1,6 @@
 package golexer
 
-import (
-	"errors"
-)
+import "errors"
 
 type Parser struct {
 	lexer *Lexer
@@ -12,10 +10,6 @@ type Parser struct {
 	errFunc func(error)
 }
 
-var (
-	ErrUnexpectToken = errors.New("ErrUnexpectToken")
-)
-
 func (self *Parser) Lexer() *Lexer {
 	return self.lexer
 }
@@ -23,7 +17,7 @@ func (self *Parser) Lexer() *Lexer {
 func (self *Parser) Expect(id int) Token {
 
 	if self.TokenID() != id {
-		panic(ErrUnexpectToken)
+		panic(errors.New("Expect " + self.lexer.MatcherString(id)))
 	}
 
 	t := *self.curr
@@ -56,6 +50,10 @@ func (self *Parser) MatcherName() string {
 	return self.curr.MatcherName()
 }
 
+func (self *Parser) MatcherString() string {
+	return self.curr.MatcherString()
+}
+
 func (self *Parser) TokenRaw() string {
 
 	return self.curr.Raw()
@@ -80,6 +78,9 @@ func ErrorCatcher(errFunc func(error)) {
 
 	case error:
 		errFunc(err.(error))
+	case nil:
+	default:
+		panic(err)
 	}
 }
 
