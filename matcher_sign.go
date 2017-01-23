@@ -20,7 +20,7 @@ func isSign(r rune) bool {
 		r != '\n'
 }
 func (self *SignMatcher) String() string {
-	return fmt.Sprintf("%s(%s)", reflect.TypeOf(self).Elem().Name(), string(self.word))
+	return fmt.Sprintf("%s('%s')", reflect.TypeOf(self).Elem().Name(), string(self.word))
 }
 
 func (self *SignMatcher) Match(tz *Tokenizer) (*Token, error) {

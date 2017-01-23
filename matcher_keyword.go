@@ -12,13 +12,17 @@ type KeywordMatcher struct {
 	word []rune
 }
 
-func isKeyword(r rune) bool {
-	return unicode.IsLetter(r) ||
-		r == '_'
+func isKeyword(r rune, index int) bool {
+	basic := unicode.IsLetter(r) || r == '_'
+	if index == 0 {
+		return basic
+	}
+
+	return basic || unicode.IsDigit(r)
 }
 
 func (self *KeywordMatcher) String() string {
-	return fmt.Sprintf("%s(%s)", reflect.TypeOf(self).Elem().Name(), string(self.word))
+	return fmt.Sprintf("%s('%s')", reflect.TypeOf(self).Elem().Name(), string(self.word))
 }
 
 func (self *KeywordMatcher) Match(tz *Tokenizer) (*Token, error) {
@@ -27,19 +31,23 @@ func (self *KeywordMatcher) Match(tz *Tokenizer) (*Token, error) {
 		return nil, nil
 	}
 
-	for i, c := range self.word {
+	var index int
 
-		if !isKeyword(c) {
+	for _, c := range self.word {
+
+		if !isKeyword(c, index) {
 			return nil, nil
 		}
 
-		if tz.Peek(i) != c {
+		if tz.Peek(index) != c {
 			return nil, nil
 		}
+
+		index++
 
 	}
 
-	pc := tz.Peek(len(self.word))
+	pc := tz.Peek(index)
 
 	var needParser bool
 
@@ -58,7 +66,7 @@ func (self *KeywordMatcher) Match(tz *Tokenizer) (*Token, error) {
 		return true
 	})
 
-	if isKeyword(pc) && !needParser {
+	if isKeyword(pc, index) && !needParser {
 		return nil, nil
 	}
 
@@ -78,8 +86,8 @@ func NewKeywordMatcher(id int, word string) TokenMatcher {
 		word:        []rune(word),
 	}
 
-	for _, c := range self.word {
-		if !isKeyword(c) {
+	for i, c := range self.word {
+		if !isKeyword(c, i) {
 			panic("not keyword")
 		}
 	}
