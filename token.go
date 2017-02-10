@@ -55,7 +55,7 @@ func (self Token) Raw() string {
 	return self.raw
 }
 
-func (self *Token) ToFloat32() float32 {
+func (self Token) ToFloat32() float32 {
 	v, err := strconv.ParseFloat(self.value, 32)
 
 	if err != nil {
@@ -65,7 +65,7 @@ func (self *Token) ToFloat32() float32 {
 	return float32(v)
 }
 
-func (self *Token) ToInt32() int32 {
+func (self Token) ToInt32() int32 {
 	v, err := strconv.ParseInt(self.value, 10, 32)
 
 	if err != nil {
@@ -75,7 +75,7 @@ func (self *Token) ToInt32() int32 {
 	return int32(v)
 }
 
-func (self *Token) ToInt() int {
+func (self Token) ToInt() int {
 	v, err := strconv.ParseInt(self.value, 10, 32)
 
 	if err != nil {
@@ -85,7 +85,7 @@ func (self *Token) ToInt() int {
 	return int(v)
 }
 
-func (self *Token) ToInt64() int64 {
+func (self Token) ToInt64() int64 {
 	v, err := strconv.ParseInt(self.value, 10, 64)
 
 	if err != nil {
