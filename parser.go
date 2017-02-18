@@ -7,6 +7,8 @@ type Parser struct {
 
 	curr *Token
 
+	srcName string
+
 	errFunc func(error)
 }
 
@@ -59,35 +61,19 @@ func (self *Parser) TokenRaw() string {
 	return self.curr.Raw()
 }
 
-func (self *Parser) TokenPos() (int, int) {
-	return self.curr.line, self.curr.index
-}
-
-func ErrorCatcher(errFunc func(error)) {
-
-	err := recover()
-
-	switch err.(type) {
-	// 运行时错误
-	case interface {
-		RuntimeError()
-	}:
-
-		// 继续外抛， 方便调试
-		panic(err)
-
-	case error:
-		errFunc(err.(error))
-	case nil:
-	default:
-		panic(err)
+func (self *Parser) TokenPos() TokenPos {
+	return TokenPos{
+		Line:       self.curr.line,
+		Col:        self.curr.index,
+		SourceName: self.srcName,
 	}
 }
 
-func NewParser(l *Lexer) *Parser {
+func NewParser(l *Lexer, srcName string) *Parser {
 
 	return &Parser{
-		lexer: l,
+		lexer:   l,
+		srcName: srcName,
 	}
 
 }

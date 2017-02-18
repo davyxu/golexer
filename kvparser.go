@@ -37,7 +37,7 @@ func ParseKV(str string, callback func(string, interface{}) bool) (errRet error)
 
 	l.Start(str)
 
-	p := NewParser(l)
+	p := NewParser(l, str)
 
 	defer ErrorCatcher(func(err error) {
 
