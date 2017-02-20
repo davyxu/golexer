@@ -53,7 +53,7 @@ func NewCustomParser() *CustomParser {
 	l.AddMatcher(NewUnknownMatcher(Token_Unknown))
 
 	return &CustomParser{
-		Parser: NewParser(l),
+		Parser: NewParser(l, "custom"),
 	}
 }
 
