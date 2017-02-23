@@ -3,8 +3,7 @@ package golexer
 type Tokenizer struct {
 	src   []rune
 	index int
-	line  int
-	Lexer *Lexer
+	lex   *Lexer
 }
 
 func (self *Tokenizer) Current() rune {
@@ -25,7 +24,7 @@ func (self *Tokenizer) Count() int {
 }
 
 func (self *Tokenizer) Line() int {
-	return self.line
+	return self.lex.pos.Line
 }
 
 func (self *Tokenizer) Peek(offset int) rune {
@@ -40,11 +39,13 @@ func (self *Tokenizer) Peek(offset int) rune {
 func (self *Tokenizer) ConsumeOne() {
 
 	self.index++
+	self.lex.pos.Col++
 }
 
 func (self *Tokenizer) ConsumeMulti(count int) {
 
 	self.index += count
+	self.lex.pos.Col += count
 }
 
 func (self *Tokenizer) EOF() bool {
@@ -52,7 +53,8 @@ func (self *Tokenizer) EOF() bool {
 }
 
 func (self *Tokenizer) increaseLine() {
-	self.line++
+	self.lex.pos.Line++
+	self.lex.pos.Col = 1
 }
 
 func (self *Tokenizer) StringRange(begin, end int) string {
@@ -71,8 +73,7 @@ func (self *Tokenizer) StringRange(begin, end int) string {
 func NewTokenizer(s string, l *Lexer) *Tokenizer {
 
 	return &Tokenizer{
-		src:   []rune(s),
-		line:  1,
-		Lexer: l,
+		src: []rune(s),
+		lex: l,
 	}
 }

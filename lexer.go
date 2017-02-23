@@ -6,6 +6,8 @@ type Lexer struct {
 	running bool
 
 	tz *Tokenizer
+
+	pos TokenPos
 }
 
 type matcherMeta struct {
@@ -114,6 +116,8 @@ func (self *Lexer) readToken() (*Token, error) {
 
 func NewLexer() *Lexer {
 
-	return &Lexer{}
+	return &Lexer{
+		pos: DefaultTokenPos,
+	}
 
 }

@@ -51,7 +51,7 @@ func (self *KeywordMatcher) Match(tz *Tokenizer) (*Token, error) {
 
 	var needParser bool
 
-	tz.Lexer.VisitMatcher(func(m TokenMatcher) bool {
+	tz.lex.VisitMatcher(func(m TokenMatcher) bool {
 
 		km, ok := m.(*KeywordMatcher)
 		if ok {

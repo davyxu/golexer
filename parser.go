@@ -7,13 +7,20 @@ type Parser struct {
 
 	curr *Token
 
-	srcName string
-
 	errFunc func(error)
+
+	prePos TokenPos
 }
 
 func (self *Parser) Lexer() *Lexer {
 	return self.lexer
+}
+
+func (self *Parser) TokenPos() TokenPos {
+	return self.lexer.pos
+}
+func (self *Parser) PreTokenPos() TokenPos {
+	return self.prePos
 }
 
 func (self *Parser) Expect(id int) Token {
@@ -30,6 +37,8 @@ func (self *Parser) Expect(id int) Token {
 }
 
 func (self *Parser) NextToken() {
+
+	self.prePos = self.lexer.pos
 
 	token, err := self.lexer.Read()
 
@@ -61,19 +70,14 @@ func (self *Parser) TokenRaw() string {
 	return self.curr.Raw()
 }
 
-func (self *Parser) TokenPos() TokenPos {
-	return TokenPos{
-		Line:       self.curr.line,
-		Col:        self.curr.index,
-		SourceName: self.srcName,
-	}
-}
-
 func NewParser(l *Lexer, srcName string) *Parser {
 
-	return &Parser{
-		lexer:   l,
-		srcName: srcName,
+	self := &Parser{
+		lexer: l,
 	}
+
+	self.lexer.pos.SourceName = srcName
+
+	return self
 
 }

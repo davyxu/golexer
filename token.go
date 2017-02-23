@@ -10,8 +10,8 @@ type Token struct {
 	value   string
 	raw     string
 	matcher TokenMatcher
-	line    int // 行
-	index   int // 列
+	pos     TokenPos
+	index   int
 }
 
 func (self *Token) Line() int {
@@ -19,7 +19,7 @@ func (self *Token) Line() int {
 		return 0
 	}
 
-	return self.line
+	return self.pos.Line
 }
 
 func (self *Token) Index() int {
@@ -117,7 +117,7 @@ func (self *Token) String() string {
 		return ""
 	}
 
-	return fmt.Sprintf("line: %d id:%d matcher: %s  value:%s", self.line, self.MatcherID(), self.MatcherName(), self.value)
+	return fmt.Sprintf("line: %d id:%d matcher: %s  value:%s", self.pos.Line, self.MatcherID(), self.MatcherName(), self.value)
 }
 
 func NewToken(m TokenMatcher, tz *Tokenizer, v string, raw string) *Token {
@@ -133,7 +133,7 @@ func NewToken(m TokenMatcher, tz *Tokenizer, v string, raw string) *Token {
 	}
 
 	if tz != nil {
-		self.line = tz.Line()
+		self.pos = tz.lex.pos
 		self.index = tz.Index()
 	}
 

@@ -4,6 +4,8 @@ import (
 	"fmt"
 )
 
+var DefaultTokenPos = TokenPos{Line: 1, Col: 1}
+
 type TokenPos struct {
 	Line       int
 	Col        int
