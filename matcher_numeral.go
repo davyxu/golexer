@@ -16,11 +16,11 @@ func (self *NumeralMatcher) String() string {
 	return reflect.TypeOf(self).Elem().Name()
 }
 
-func (self *NumeralMatcher) Match(tz *Tokenizer) (*Token, error) {
+func (self *NumeralMatcher) Match(tz *Tokenizer) (Token, error) {
 
 	if !(unicode.IsDigit(tz.Current()) || (self.includeNagtive && tz.Current() == '-')) {
 
-		return nil, nil
+		return EmptyToken, nil
 	}
 
 	begin := tz.Index()
@@ -51,7 +51,7 @@ func (self *NumeralMatcher) Match(tz *Tokenizer) (*Token, error) {
 
 				// .之后的第一个字符居然不是数字
 				if i == 0 {
-					return nil, errors.New("invalid numeral")
+					return EmptyToken, errors.New("invalid numeral")
 				}
 
 				break

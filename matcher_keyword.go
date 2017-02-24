@@ -25,10 +25,10 @@ func (self *KeywordMatcher) String() string {
 	return fmt.Sprintf("%s('%s')", reflect.TypeOf(self).Elem().Name(), string(self.word))
 }
 
-func (self *KeywordMatcher) Match(tz *Tokenizer) (*Token, error) {
+func (self *KeywordMatcher) Match(tz *Tokenizer) (Token, error) {
 
 	if (tz.Count() - tz.Index()) < len(self.word) {
-		return nil, nil
+		return EmptyToken, nil
 	}
 
 	var index int
@@ -36,11 +36,11 @@ func (self *KeywordMatcher) Match(tz *Tokenizer) (*Token, error) {
 	for _, c := range self.word {
 
 		if !isKeyword(c, index) {
-			return nil, nil
+			return EmptyToken, nil
 		}
 
 		if tz.Peek(index) != c {
-			return nil, nil
+			return EmptyToken, nil
 		}
 
 		index++
@@ -67,7 +67,7 @@ func (self *KeywordMatcher) Match(tz *Tokenizer) (*Token, error) {
 	})
 
 	if isKeyword(pc, index) && !needParser {
-		return nil, nil
+		return EmptyToken, nil
 	}
 
 	tz.ConsumeMulti(len(self.word))

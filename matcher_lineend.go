@@ -11,7 +11,7 @@ func (self *LineEndMatcher) String() string {
 	return reflect.TypeOf(self).Elem().Name()
 }
 
-func (self *LineEndMatcher) Match(tz *Tokenizer) (*Token, error) {
+func (self *LineEndMatcher) Match(tz *Tokenizer) (Token, error) {
 
 	var count int
 	for {
@@ -31,7 +31,7 @@ func (self *LineEndMatcher) Match(tz *Tokenizer) (*Token, error) {
 	}
 
 	if count == 0 {
-		return nil, nil
+		return EmptyToken, nil
 	}
 
 	tz.ConsumeMulti(count)

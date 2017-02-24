@@ -14,10 +14,10 @@ func (self *IdentifierMatcher) String() string {
 	return reflect.TypeOf(self).Elem().Name()
 }
 
-func (self *IdentifierMatcher) Match(tz *Tokenizer) (*Token, error) {
+func (self *IdentifierMatcher) Match(tz *Tokenizer) (Token, error) {
 
 	if !unicode.IsLetter(tz.Current()) && tz.Current() != '_' {
-		return nil, nil
+		return EmptyToken, nil
 	}
 
 	begin := tz.Index()

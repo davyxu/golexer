@@ -11,10 +11,10 @@ func (self *UnknownMatcher) String() string {
 	return reflect.TypeOf(self).Elem().Name()
 }
 
-func (self *UnknownMatcher) Match(tz *Tokenizer) (*Token, error) {
+func (self *UnknownMatcher) Match(tz *Tokenizer) (Token, error) {
 
 	if tz.Current() == 0 {
-		return nil, nil
+		return EmptyToken, nil
 	}
 
 	begin := tz.Index()

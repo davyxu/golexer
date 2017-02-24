@@ -15,10 +15,10 @@ func (self *StringMatcher) String() string {
 	return reflect.TypeOf(self).Elem().Name()
 }
 
-func (self *StringMatcher) Match(tz *Tokenizer) (*Token, error) {
+func (self *StringMatcher) Match(tz *Tokenizer) (Token, error) {
 
 	if tz.Current() != '"' && tz.Current() != '\'' {
-		return nil, nil
+		return EmptyToken, nil
 	}
 
 	beginChar := tz.Current()

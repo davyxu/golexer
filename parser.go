@@ -5,7 +5,7 @@ import "errors"
 type Parser struct {
 	lexer *Lexer
 
-	curr *Token
+	curr Token
 
 	errFunc func(error)
 
@@ -29,7 +29,7 @@ func (self *Parser) Expect(id int) Token {
 		panic(errors.New("Expect " + self.lexer.MatcherString(id)))
 	}
 
-	t := *self.curr
+	t := self.curr
 
 	self.NextToken()
 
@@ -47,6 +47,10 @@ func (self *Parser) NextToken() {
 	}
 
 	self.curr = token
+}
+
+func (self *Parser) RawToken() Token {
+	return self.curr
 }
 
 func (self *Parser) TokenID() int {

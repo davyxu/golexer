@@ -11,9 +11,9 @@ func (self *UnixStyleCommentMatcher) String() string {
 	return reflect.TypeOf(self).Elem().Name()
 }
 
-func (self *UnixStyleCommentMatcher) Match(tz *Tokenizer) (*Token, error) {
+func (self *UnixStyleCommentMatcher) Match(tz *Tokenizer) (Token, error) {
 	if tz.Current() != '#' {
-		return nil, nil
+		return EmptyToken, nil
 	}
 
 	tz.ConsumeOne()
@@ -30,7 +30,7 @@ func (self *UnixStyleCommentMatcher) Match(tz *Tokenizer) (*Token, error) {
 
 	}
 
-	return NewToken(self, tz, tz.StringRange(begin, tz.index), ""), nil
+	return NewToken(self, tz, tz.StringRange(begin, tz.index-1), ""), nil
 }
 
 func NewUnixStyleCommentMatcher(id int) TokenMatcher {

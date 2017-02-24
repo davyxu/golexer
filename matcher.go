@@ -1,7 +1,7 @@
 package golexer
 
 type TokenMatcher interface {
-	Match(*Tokenizer) (*Token, error)
+	Match(*Tokenizer) (Token, error)
 	ID() int
 	String() string
 }

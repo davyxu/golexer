@@ -68,7 +68,7 @@ func (self *Lexer) Start(src string) {
 	self.tz = NewTokenizer(src, self)
 }
 
-func (self *Lexer) Read() (*Token, error) {
+func (self *Lexer) Read() (Token, error) {
 
 	if !self.running {
 		return eofToken, nil
@@ -83,7 +83,7 @@ func (self *Lexer) Read() (*Token, error) {
 	return tk, err
 }
 
-func (self *Lexer) readToken() (*Token, error) {
+func (self *Lexer) readToken() (Token, error) {
 
 	if len(self.matchers) == 0 {
 		return eofToken, nil
@@ -99,7 +99,7 @@ func (self *Lexer) readToken() (*Token, error) {
 				return NewToken(nil, self.tz, err.Error(), ""), err
 			}
 
-			if token == nil {
+			if token == EmptyToken {
 				continue
 			}
 

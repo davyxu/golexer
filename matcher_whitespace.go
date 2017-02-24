@@ -15,7 +15,7 @@ func isWhiteSpace(c rune) bool {
 	return c == ' ' || c == '\t'
 }
 
-func (self *WhiteSpaceMatcher) Match(tz *Tokenizer) (*Token, error) {
+func (self *WhiteSpaceMatcher) Match(tz *Tokenizer) (Token, error) {
 
 	var count int
 
@@ -33,7 +33,7 @@ func (self *WhiteSpaceMatcher) Match(tz *Tokenizer) (*Token, error) {
 	}
 
 	if count == 0 {
-		return nil, nil
+		return EmptyToken, nil
 	}
 
 	tz.ConsumeMulti(count)

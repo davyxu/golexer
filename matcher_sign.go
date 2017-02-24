@@ -23,20 +23,20 @@ func (self *SignMatcher) String() string {
 	return fmt.Sprintf("%s('%s')", reflect.TypeOf(self).Elem().Name(), string(self.word))
 }
 
-func (self *SignMatcher) Match(tz *Tokenizer) (*Token, error) {
+func (self *SignMatcher) Match(tz *Tokenizer) (Token, error) {
 
 	if (tz.Count() - tz.Index()) < len(self.word) {
-		return nil, nil
+		return EmptyToken, nil
 	}
 
 	for i, c := range self.word {
 
 		if !isSign(c) {
-			return nil, nil
+			return EmptyToken, nil
 		}
 
 		if tz.Peek(i) != c {
-			return nil, nil
+			return EmptyToken, nil
 		}
 
 	}

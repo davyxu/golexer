@@ -14,25 +14,19 @@ type Token struct {
 	index   int
 }
 
-func (self *Token) Line() int {
-	if self == nil {
-		return 0
-	}
+func (self Token) Line() int {
 
 	return self.pos.Line
 }
 
-func (self *Token) Index() int {
-	if self == nil {
-		return 0
-	}
+func (self Token) Index() int {
 
 	return self.index
 }
 
 func (self *Token) MatcherID() int {
 
-	if self == nil || self.matcher == nil {
+	if self.matcher == nil {
 		return 0
 	}
 
@@ -120,13 +114,15 @@ func (self *Token) String() string {
 	return fmt.Sprintf("line: %d id:%d matcher: %s  value:%s", self.pos.Line, self.MatcherID(), self.MatcherName(), self.value)
 }
 
-func NewToken(m TokenMatcher, tz *Tokenizer, v string, raw string) *Token {
+var EmptyToken = NewToken(nil, nil, "NIL", "")
+
+func NewToken(m TokenMatcher, tz *Tokenizer, v string, raw string) Token {
 
 	if raw == "" {
 		raw = v
 	}
 
-	self := &Token{
+	self := Token{
 		value:   v,
 		raw:     raw,
 		matcher: m,
