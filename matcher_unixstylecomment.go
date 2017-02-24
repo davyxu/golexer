@@ -30,7 +30,7 @@ func (self *UnixStyleCommentMatcher) Match(tz *Tokenizer) (Token, error) {
 
 	}
 
-	return NewToken(self, tz, tz.StringRange(begin, tz.index-1), ""), nil
+	return NewToken(self, tz, tz.StringRange(begin, tz.index), ""), nil
 }
 
 func NewUnixStyleCommentMatcher(id int) TokenMatcher {
