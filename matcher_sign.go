@@ -6,7 +6,7 @@ import (
 	"unicode"
 )
 
-// 操作符，分隔符，关键字
+// 操作符，分隔符
 type SignMatcher struct {
 	baseMatcher
 	word []rune

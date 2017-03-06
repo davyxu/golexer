@@ -45,8 +45,8 @@ func NewCustomParser() *CustomParser {
 	l.AddMatcher(NewSignMatcher(Token_Dot, "."))
 	l.AddMatcher(NewKeywordMatcher(Token_Go, "go"))
 	l.AddMatcher(NewKeywordMatcher(Token_XX, "xx"))
-	l.AddMatcher(NewKeywordMatcher(Token_Every, "每"))
-	l.AddMatcher(NewKeywordMatcher(Token_Week, "周"))
+	l.AddMatcher(NewKeywordMatcher(Token_Every, "等"))
+	l.AddMatcher(NewKeywordMatcher(Token_Week, "秒"))
 
 	l.AddMatcher(NewIdentifierMatcher(Token_Identifier))
 
@@ -73,7 +73,7 @@ func TestParser(t *testing.T) {
 		Base64Text
 		gonew.xx
 		_id # comment
-		每周
+		等2秒
 		"\'\""
 		""
 		;
@@ -89,12 +89,14 @@ MatcherName: 'NumeralMatcher' Value: '123.3'
 MatcherName: 'SignMatcher' Value: ';'
 MatcherName: 'NumeralMatcher' Value: '-1'
 MatcherName: 'IdentifierMatcher' Value: 'Base64Text'
-MatcherName: 'IdentifierMatcher' Value: 'gonew'
+MatcherName: 'KeywordMatcher' Value: 'go'
+MatcherName: 'IdentifierMatcher' Value: 'new'
 MatcherName: 'SignMatcher' Value: '.'
 MatcherName: 'KeywordMatcher' Value: 'xx'
 MatcherName: 'IdentifierMatcher' Value: '_id'
-MatcherName: 'KeywordMatcher' Value: '每'
-MatcherName: 'KeywordMatcher' Value: '周'
+MatcherName: 'KeywordMatcher' Value: '等'
+MatcherName: 'NumeralMatcher' Value: '2'
+MatcherName: 'KeywordMatcher' Value: '秒'
 MatcherName: 'StringMatcher' Value: ''"'
 MatcherName: 'StringMatcher' Value: ''
 MatcherName: 'SignMatcher' Value: ';'

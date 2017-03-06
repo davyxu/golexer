@@ -6,7 +6,7 @@ import (
 	"unicode"
 )
 
-// 操作符，分隔符，关键字
+// 下划线和字母(中文)+数字=关键字
 type KeywordMatcher struct {
 	baseMatcher
 	word []rune
@@ -45,29 +45,6 @@ func (self *KeywordMatcher) Match(tz *Tokenizer) (Token, error) {
 
 		index++
 
-	}
-
-	pc := tz.Peek(index)
-
-	var needParser bool
-
-	tz.lex.VisitMatcher(func(m TokenMatcher) bool {
-
-		km, ok := m.(*KeywordMatcher)
-		if ok {
-
-			if km.word[0] == pc {
-				needParser = true
-				return false
-			}
-
-		}
-
-		return true
-	})
-
-	if isKeyword(pc, index) && !needParser {
-		return EmptyToken, nil
 	}
 
 	tz.ConsumeMulti(len(self.word))
