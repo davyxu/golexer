@@ -22,6 +22,7 @@ const (
 	Token_Every
 	Token_Week
 	Token_Semicolon
+	Token_BackTicker
 )
 
 type CustomParser struct {
@@ -47,6 +48,7 @@ func NewCustomParser() *CustomParser {
 	l.AddMatcher(NewKeywordMatcher(Token_XX, "xx"))
 	l.AddMatcher(NewKeywordMatcher(Token_Every, "等"))
 	l.AddMatcher(NewKeywordMatcher(Token_Week, "秒"))
+	l.AddMatcher(NewBackTicksMatcher(Token_BackTicker))
 
 	l.AddMatcher(NewIdentifierMatcher(Token_Identifier))
 
@@ -55,6 +57,31 @@ func NewCustomParser() *CustomParser {
 	return &CustomParser{
 		Parser: NewParser(l, "custom"),
 	}
+}
+
+// 反引号内容
+func TestBackTicks(t *testing.T) {
+
+	p := NewCustomParser()
+
+	defer ErrorCatcher(func(err error) {
+
+		t.Error(err.Error())
+
+	})
+
+	p.Lexer().Start("go . `xxx` ")
+
+	p.NextToken()
+
+	for p.TokenID() != 0 {
+
+		t.Log(fmt.Sprintf("MatcherName: '%s' Value: '%s'\n", p.MatcherName(), p.TokenValue()))
+
+		p.NextToken()
+
+	}
+
 }
 
 func TestParser(t *testing.T) {
