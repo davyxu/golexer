@@ -23,6 +23,8 @@ const (
 	Token_Week
 	Token_Semicolon
 	Token_BackTicker
+	Token_New
+	Token_NewClass
 )
 
 type CustomParser struct {
@@ -49,6 +51,8 @@ func NewCustomParser() *CustomParser {
 	l.AddMatcher(NewKeywordMatcher(Token_Every, "等"))
 	l.AddMatcher(NewKeywordMatcher(Token_Week, "秒"))
 	l.AddMatcher(NewBackTicksMatcher(Token_BackTicker))
+	l.AddMatcher(NewKeywordMatcher(Token_NewClass, "newclass"))
+	l.AddMatcher(NewKeywordMatcher(Token_New, "new"))
 
 	l.AddMatcher(NewIdentifierMatcher(Token_Identifier))
 
@@ -80,6 +84,34 @@ func TestBackTicks(t *testing.T) {
 
 		p.NextToken()
 
+	}
+
+}
+
+// 测试词分离，将长的串放在前部先匹配
+func TestSplite(t *testing.T) {
+
+	p := NewCustomParser()
+
+	defer ErrorCatcher(func(err error) {
+
+		t.Error(err.Error())
+
+	})
+
+	p.Lexer().Start("newclass new")
+
+	p.NextToken()
+
+	if p.TokenID() != Token_NewClass {
+		t.Log("expect newclass, got ", p.TokenValue())
+		t.FailNow()
+	}
+
+	p.NextToken()
+	if p.TokenID() != Token_New {
+		t.Log("expect new, got ", p.TokenValue())
+		t.FailNow()
 	}
 
 }
