@@ -22,11 +22,11 @@ func (self *UnixStyleCommentMatcher) Match(tz *Tokenizer) (Token, error) {
 
 	for {
 
-		tz.ConsumeOne()
-
-		if tz.Current() == '\n' || tz.Current() == 0 {
+		if tz.Current() == '\n' || tz.Current() == '\r' || tz.Current() == 0 {
 			break
 		}
+
+		tz.ConsumeOne()
 
 	}
 
