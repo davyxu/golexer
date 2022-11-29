@@ -27,7 +27,7 @@ func (self *Lexer) VisitMatcher(callback func(TokenMatcher) bool) {
 }
 
 func (self *Lexer) MatcherString(id int) string {
-	m := self.MatcherByID(id)
+	m := self.MatcherById(id)
 	if m != nil {
 		return m.String()
 	}
@@ -35,7 +35,7 @@ func (self *Lexer) MatcherString(id int) string {
 	return ""
 }
 
-func (self *Lexer) MatcherByID(id int) TokenMatcher {
+func (self *Lexer) MatcherById(id int) TokenMatcher {
 	for _, m := range self.matchers {
 		if m.m.ID() == id {
 			return m.m
